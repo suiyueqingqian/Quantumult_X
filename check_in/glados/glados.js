@@ -94,7 +94,7 @@ function signin() {
       'Authorization': siauthorization,
       "Accept-Language": `zh-cn`,
     };
-    const body = `{ "token": "glados_network" }`;
+    const body = `{ "token": "glados.network" }`;
     const signinRequest = {
       url: "https://glados.rocks/api/user/checkin",
       headers: header,
@@ -104,22 +104,25 @@ function signin() {
       var body = response.body;
       var obj = JSON.parse(body);
       if (obj.message != "oops, token error") {
-        message += "今日已签到";
-        var date = new Date();
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        if (m < 10) m = "0" + m;
-        var d = date.getDate();
-        if (d < 10) d = "0" + d;
-        var time = y + "-" + m + "-" + d;
-        var business = obj.list[0].business;
-        var sysdate = business.slice(-10);
-        if (JSON.stringify(time) == JSON.stringify(sysdate)) {
-          change = obj.list[0].change;
-          changeday = parseInt(change);
-          message += `今日签到获得${changeday}天`;
+        if (obj.message != "Please Try Tomorrow") {
+          var date = new Date();
+          var y = date.getFullYear();
+          var m = date.getMonth() + 1;
+          if (m < 10) m = "0" + m;
+          var d = date.getDate();
+          if (d < 10) d = "0" + d;
+          var time = y + "-" + m + "-" + d;
+          var business = obj.list[0].business;
+          var sysdate = business.slice(-10);
+          if (JSON.stringify(time) == JSON.stringify(sysdate)) {
+            change = obj.list[0].change;
+            changeday = parseInt(change);
+            message += `今日签到获得${changeday}天`;
+          } else {
+            message += `今日签到获得0天`;
+          }
         } else {
-          message += `今日签到获得0天`;
+          message += "今日已签到";
         }
       } else {
         message += obj.message;
