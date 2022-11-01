@@ -52,8 +52,10 @@ hostname = glados.rocks
 
 const $ = new Env("GLaDOS");
 const signcookie = "evil_gladoscookie";
+const signauthorization = "evil_galdosauthorization"
 
 var sicookie = $.getdata(signcookie);
+var siauthorization = $.getdata(siauthorization)
 var account;
 var expday;
 var remain;
@@ -89,7 +91,7 @@ function signin() {
       Host: `glados.rocks`,
       Connection: `keep-alive`,
       "User-Agent": `Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1`,
-      Referer: `https://glados.rocks/console/checkin`,
+      'Authorization': siauthorization,
       "Accept-Language": `zh-cn`,
     };
     const body = `{ "token": "glados_network" }`;
@@ -101,25 +103,26 @@ function signin() {
     $.post(signinRequest, (error, response, data) => {
       var body = response.body;
       var obj = JSON.parse(body);
-      msge = obj.message;
-      if (msge == "Please Checkin Tomorrow") {
+      if (obj.message != "oops, token error") {
         message += "今日已签到";
-      }
-      var date = new Date();
-      var y = date.getFullYear();
-      var m = date.getMonth() + 1;
-      if (m < 10) m = "0" + m;
-      var d = date.getDate();
-      if (d < 10) d = "0" + d;
-      var time = y + "-" + m + "-" + d;
-      var business = obj.list[0].business;
-      var sysdate = business.slice(-10);
-      if (JSON.stringify(time) == JSON.stringify(sysdate)) {
-        change = obj.list[0].change;
-        changeday = parseInt(change);
-        message += `今日签到获得${changeday}天`;
+        var date = new Date();
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        if (m < 10) m = "0" + m;
+        var d = date.getDate();
+        if (d < 10) d = "0" + d;
+        var time = y + "-" + m + "-" + d;
+        var business = obj.list[0].business;
+        var sysdate = business.slice(-10);
+        if (JSON.stringify(time) == JSON.stringify(sysdate)) {
+          change = obj.list[0].change;
+          changeday = parseInt(change);
+          message += `今日签到获得${changeday}天`;
+        } else {
+          message += `今日签到获得0天`;
+        }
       } else {
-        message += `今日签到获得0天`;
+        message += obj.message;
       }
       resolve();
     });
@@ -160,6 +163,9 @@ function getCookie() {
     const sicookie = $request.headers["Cookie"];
     $.log(sicookie);
     $.setdata(sicookie, signcookie);
+    const siauthorization = $request.headers["Authorization"];
+    $.log(siauthorization);
+    $.setdata(siauthorization, signauthorization);
     $.msg("GLaDOS", "", "获取签到Cookie成功🎉");
   }
 }
@@ -247,7 +253,7 @@ function Env(name, opts) {
       if (val) {
         try {
           json = JSON.parse(this.getdata(key));
-        } catch {}
+        } catch { }
       }
       return json;
     }
@@ -448,7 +454,7 @@ function Env(name, opts) {
       }
     }
 
-    get(opts, callback = () => {}) {
+    get(opts, callback = () => { }) {
       if (opts.headers) {
         delete opts.headers["Content-Type"];
         delete opts.headers["Content-Length"];
@@ -509,7 +515,7 @@ function Env(name, opts) {
       }
     }
 
-    post(opts, callback = () => {}) {
+    post(opts, callback = () => { }) {
       // 如果指定了请求体, 但没指定`Content-Type`, 则自动生成
       if (opts.body && opts.headers && !opts.headers["Content-Type"]) {
         opts.headers["Content-Type"] = "application/x-www-form-urlencoded";

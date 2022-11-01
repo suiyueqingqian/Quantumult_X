@@ -78,7 +78,10 @@
         "只有关闭<font class=\"error--text\">关键词匹配</font>才会通知最新内容，否则没匹配关键词不会通知。 ",
         "<font class=\"error--text\">Quantumult X</font>用户：B站、豆瓣榜单独立推送时可显示封面；关闭附带跳转链接点击通知也可跳转。"
       ],
-      "keys": ["evil_saveditem", "evil_savedtime"],
+      "keys": [
+        "evil_saveditem",
+        "evil_savedtime"
+      ],
       "settings": [
         {
           "id": "evil_wb_keyword",
@@ -520,7 +523,11 @@
         "此版本为尝试用Cookie签到，针对有登陆验证或跳转的机场。",
         "可利用BoxJs<font class=\"error--text\">会话切换</font>功能，一次保存一个机场信息，切换会话签到。"
       ],
-      "keys": ["evil_checkincktitle", "evil_checkinurl", "evil_checkincookie"],
+      "keys": [
+        "evil_checkincktitle",
+        "evil_checkinurl",
+        "evil_checkincookie"
+      ],
       "settings": [
         {
           "id": "evil_checkincktitle",
@@ -567,7 +574,10 @@
         "注册地址：https://github.com/glados-network/GLaDOS",
         "邀请码：3JRG4-KSGZJ-8QPXF-8PPOO"
       ],
-      "keys": ["evil_gladoscookie"],
+      "keys": [
+        "evil_gladoscookie",
+        "evil_galdosauthorization"
+      ],
       "author": "@evilbutcher",
       "repo": "https://github.com/evilbutcher/Quantumult_X/tree/master/check_in/glados",
       "icons": [
@@ -628,7 +638,9 @@
         "点此直达【<a href=\"https://raw.githubusercontent.com/evilbutcher/Quantumult_X/master/check_in/nasa/nasapic.js\">脚本地址</a>】",
         "首先前往<a href=\"https://api.nasa.gov\">NASA</a>申请一个API，申请流程非常简单，把得到的API填入脚本即可"
       ],
-      "keys": ["@NASA.nasaapi"],
+      "keys": [
+        "@NASA.nasaapi"
+      ],
       "settings": [
         {
           "id": "@NASA.translate",
@@ -662,7 +674,9 @@
       "descs_html": [
         "点此直达【<a href=\"https://raw.githubusercontent.com/evilbutcher/Quantumult_X/master/check_in/idaily/idaily.js\">脚本地址</a>】"
       ],
-      "keys": ["@iDaily.random"],
+      "keys": [
+        "@iDaily.random"
+      ],
       "settings": [
         {
           "id": "@iDaily.random",
@@ -757,7 +771,9 @@
       "descs_html": [
         "点此直达【<a href=\"https://raw.githubusercontent.com/evilbutcher/Quantumult_X/master/check_in/klcw/klcw-app.js\">脚本地址</a>】"
       ],
-      "keys": ["@klcwapp.evil_klcwappBody"],
+      "keys": [
+        "@klcwapp.evil_klcwappBody"
+      ],
       "settings": [
         {
           "id": "@klcwapp.evil_klcwappBody",
@@ -976,7 +992,10 @@
       "descs_html": [
         "点此直达【<a href=\"https://raw.githubusercontent.com/evilbutcher/Quantumult_X/master/check_in/hzh/hzh.js\">脚本地址</a>】"
       ],
-      "keys": ["@hzh.evil_hzhCookie", "@hzh.evil_hzhUserToken"],
+      "keys": [
+        "@hzh.evil_hzhCookie",
+        "@hzh.evil_hzhUserToken"
+      ],
       "author": "@evilbutcher",
       "repo": "https://github.com/evilbutcher/Quantumult_X/tree/master/check_in/hzh",
       "icons": [
