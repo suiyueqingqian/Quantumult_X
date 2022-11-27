@@ -62,7 +62,6 @@ $.body = $.read("evil_billBody");
     }
     if ($.cookie != undefined) {
         await checkin();
-        showmsg();
     } else {
         $.notify("国网电费", "", "❌ 请先获取Cookie");
     }
