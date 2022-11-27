@@ -60,7 +60,7 @@ $.body = $.read("evil_billBody");
         getCookie();
         return;
     }
-    if ($.cookie != undefined) {
+    if ($.cookie != undefined && $.body != undefined) {
         await checkin();
     } else {
         $.notify("国网电费", "", "❌ 请先获取Cookie");
@@ -103,12 +103,13 @@ function checkin() {
         body: body,
     };
     return $.http.post(myRequest).then((response) => {
-        var msg = response.body.msg
         var statusCode = response.statusCode
-        if (msg == ok && statusCode == 200) {
-            var addr = response.body.data.ELEC_ADDR
-            var balance = response.body.data.BALANCE_SHEET
-            $.notify("国网电费", addr, "当前余额：" + balance);
+        if (statusCode == 200) {
+            var data = JSON.parse(response.body).data
+            var addr = data.ELEC_ADDR
+            var balance = data.BALANCE_SHEET
+            var time = data.AS_TIME
+            $.notify("国网电费", addr, time + "\n当前余额：" + balance + "元");
         } else {
             $.error(JSON.stringify(response));
             throw new ERR.ParseError("请检查日志，稍后再试");
