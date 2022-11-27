@@ -60,7 +60,7 @@ $.body = $.read("evil_billBody");
         getCookie();
         return;
     }
-    if ($.cookie != undefined && $.body != undefined) {
+    if ($.cookie != undefined && $.body != undefined && $.cookie != "" && $.body != "") {
         await checkin();
     } else {
         $.notify("国网电费", "", "❌ 请先获取Cookie");
