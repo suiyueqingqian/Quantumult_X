@@ -138,7 +138,7 @@ function checkssq() {
       var red = JSON.stringify(prered).slice(18, -4)
       var blue = JSON.stringify(preblue).slice(19, -4)
       var qh = JSON.stringify(preqh).slice(16, -3)
-      var detail = "红球：" + red + "\n蓝球：" + blue;
+      var detail = "红球：" + red + "  蓝球：" + blue;
       $.notify("彩票查询", "双色球 " + qh + "期", detail);
       $.log("双色球" + "\n" + detail);
     }
@@ -247,7 +247,7 @@ function checkqlc() {
       var red = JSON.stringify(prered).slice(18, -4)
       var blue = JSON.stringify(preblue).slice(19, -4)
       var qh = JSON.stringify(preqh).slice(16, -3)
-      var detail = "红球：" + red + "\n蓝球：" + blue;
+      var detail = "红球：" + red + "  蓝球：" + blue;
       $.notify("彩票查询", "七乐彩 " + qh + "期", detail);
       $.log("七乐彩" + "\n" + detail);
     }
