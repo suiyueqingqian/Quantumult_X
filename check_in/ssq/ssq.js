@@ -55,7 +55,8 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
     if (findlatest == true || findlatest == "true") {
       if (week == 2 || week == 4 || week == 0) {
         $.log("查询双色球");
-        await checkssq();
+        //await checkssq();
+        $.notify("彩票查询", "双色球", "网站挂了，等待新来源");
       } else {
         $.log("双色球今日未开奖");
       }
@@ -77,13 +78,15 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
   }
   if (fc3d == true || fc3d == "true") {
     $.log("查询福彩3D");
-    await check3d();
+    //await check3d();
+    $.notify("彩票查询", "福彩3D", "网站挂了，等待新来源");
   }
   if (qlc == true || qlc == "true") {
     if (findlatest == true || findlatest == "true") {
       if (week == 1 || week == 3 || week == 5) {
         $.log("查询七乐彩");
-        await checkqlc();
+        //await checkqlc();
+        $.notify("彩票查询", "七乐彩", "网站挂了，等待新来源");
       } else {
         $.log("七乐彩今日未开奖");
       }
@@ -331,8 +334,8 @@ function HTTP(
     options =
       typeof options === "string"
         ? {
-            url: options,
-          }
+          url: options,
+        }
         : options;
     const baseURL = defaultOptions.baseURL;
     if (baseURL && !URL_REGEX.test(options.url || "")) {
@@ -345,9 +348,9 @@ function HTTP(
     const timeout = options.timeout;
     const events = {
       ...{
-        onRequest: () => {},
+        onRequest: () => { },
         onResponse: (resp) => resp,
-        onTimeout: () => {},
+        onTimeout: () => { },
       },
       ...options.events,
     };
@@ -395,21 +398,21 @@ function HTTP(
     let timeoutid;
     const timer = timeout
       ? new Promise((_, reject) => {
-          timeoutid = setTimeout(() => {
-            events.onTimeout();
-            return reject(
-              `${method} URL: ${options.url} exceeds the timeout ${timeout} ms`
-            );
-          }, timeout);
-        })
+        timeoutid = setTimeout(() => {
+          events.onTimeout();
+          return reject(
+            `${method} URL: ${options.url} exceeds the timeout ${timeout} ms`
+          );
+        }, timeout);
+      })
       : null;
 
     return (
       timer
         ? Promise.race([timer, worker]).then((res) => {
-            clearTimeout(timeoutid);
-            return res;
-          })
+          clearTimeout(timeoutid);
+          return res;
+        })
         : worker
     ).then((resp) => events.onResponse(resp));
   }
