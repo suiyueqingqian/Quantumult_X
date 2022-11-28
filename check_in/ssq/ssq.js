@@ -85,8 +85,8 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
     if (findlatest == true || findlatest == "true") {
       if (week == 1 || week == 3 || week == 5) {
         $.log("查询七乐彩");
-        //await checkqlc();
-        $.notify("彩票查询", "七乐彩", "网站挂了，等待新来源");
+        await checkqlc();
+        //$.notify("彩票查询", "七乐彩", "网站挂了，等待新来源");
       } else {
         $.log("七乐彩今日未开奖");
       }
@@ -113,7 +113,7 @@ function checkssq() {
   const headers = {
     "Accept-Encoding": `gzip, deflate`,
     Connection: `keep-alive`,
-    Referer: `http://www.cwl.gov.cn/kjxx/ssq/`,
+    Referer: `http://www.cwl.gov.cn/html5/fcpz/yxjs/`,
     Accept: `application/json, text/javascript, */*; q=0.01`,
     Host: `www.cwl.gov.cn`,
     "User-Agent": `Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1`,
@@ -188,7 +188,7 @@ function check3d() {
   const headers = {
     "Accept-Encoding": `gzip, deflate`,
     Connection: `keep-alive`,
-    Referer: `http://www.cwl.gov.cn/kjxx/fc3d/kjgg/`,
+    Referer: `http://www.cwl.gov.cn/html5/fcpz/yxjs/`,
     Accept: `application/json, text/javascript, */*; q=0.01`,
     Host: `www.cwl.gov.cn`,
     "User-Agent": `Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1`,
@@ -218,11 +218,11 @@ function check3d() {
 }
 
 function checkqlc() {
-  const url = `http://www.cwl.gov.cn/cwl_admin/kjxx/findDrawNotice?name=qlc&issueCount=5`;
+  const url = `http://www.cwl.gov.cn/html5/fcpz/yxjs/qlc/`;
   headers = {
     "Accept-Encoding": `gzip, deflate`,
     Connection: `keep-alive`,
-    Referer: `http://www.cwl.gov.cn/kjxx/qlc/`,
+    Referer: `http://www.cwl.gov.cn/html5/fcpz/yxjs/`,
     Accept: `application/json, text/javascript, */*; q=0.01`,
     Host: `www.cwl.gov.cn`,
     "User-Agent": `Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1`,
@@ -237,20 +237,19 @@ function checkqlc() {
 
   return $.http.get(myRequest).then((response) => {
     if (response.statusCode == 200) {
-      $.data = JSON.parse(response.body).result[0];
-      var content = $.data.content;
-      var name = $.data.name;
-      var date = $.data.date;
-      var red = $.data.red;
-      var blue = $.data.blue;
-      if (content == undefined) {
-        var detail = "红球：" + red + "\n蓝球：" + blue + "\n信息暂未更新";
-      } else {
-        var detail =
-          date + "\n红球：" + red + "\n蓝球：" + blue + "\n一等奖 " + content;
-      }
-      $.notify("彩票查询", name, detail);
-      $.log(name + "\n" + detail);
+      $.data = JSON.stringify(response.body)
+      var getred = /qclRed-dom\\\"\>\[.*?\]\</
+      var getblue = /qclBlue-dom\\\"\>\[.*?\]\</
+      var getqh = /qlcQh-dom\\\"\>.*?\</
+      var prered = $.data.match(getred)
+      var preblue = $.data.match(getblue)
+      var preqh = $.data.match(getqh)
+      var red = JSON.stringify(prered).slice(18, -4)
+      var blue = JSON.stringify(preblue).slice(19, -4)
+      var qh = JSON.stringify(preqh).slice(16, -3)
+      var detail = "红球：" + red + "\n蓝球：" + blue;
+      $.notify("彩票查询", "七乐彩 " + qh + "期", detail);
+      $.log("七乐彩" + "\n" + detail);
     }
   });
 }
