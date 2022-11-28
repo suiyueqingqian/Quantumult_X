@@ -55,8 +55,8 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
     if (findlatest == true || findlatest == "true") {
       if (week == 2 || week == 4 || week == 0) {
         $.log("查询双色球");
-        //await checkssq();
-        $.notify("彩票查询", "双色球", "网站挂了，等待新来源");
+        await checkssq();
+        //$.notify("彩票查询", "双色球", "网站挂了，等待新来源");
       } else {
         $.log("双色球今日未开奖");
       }
@@ -78,8 +78,8 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
   }
   if (fc3d == true || fc3d == "true") {
     $.log("查询福彩3D");
-    //await check3d();
-    $.notify("彩票查询", "福彩3D", "网站挂了，等待新来源");
+    await check3d();
+    //$.notify("彩票查询", "福彩3D", "网站挂了，等待新来源");
   }
   if (qlc == true || qlc == "true") {
     if (findlatest == true || findlatest == "true") {
@@ -109,7 +109,7 @@ const findlatest = $.read("new") || true; //默认仅查询当日开奖的彩票
   .finally(() => $.done());
 
 function checkssq() {
-  const url = `http://www.cwl.gov.cn/cwl_admin/kjxx/findDrawNotice?name=ssq&issueCount=5`;
+  const url = `http://www.cwl.gov.cn/html5/fcpz/yxjs/ssq/`;
   const headers = {
     "Accept-Encoding": `gzip, deflate`,
     Connection: `keep-alive`,
@@ -128,31 +128,19 @@ function checkssq() {
 
   return $.http.get(myRequest).then((response) => {
     if (response.statusCode == 200) {
-      $.data = JSON.parse(response.body).result[0];
-      var poolmoney = JSON.stringify(
-        ($.data.poolmoney / 10000).toFixed(2)
-      ).slice(1, -1);
-      var content = $.data.content;
-      var date = $.data.date;
-      var name = $.data.name;
-      var red = $.data.red;
-      var blue = $.data.blue;
-      if (content == "") {
-        var detail = "红球：" + red + "\n蓝球：" + blue + "\n奖池信息暂未更新";
-      } else {
-        var detail =
-          date +
-          "\n红球：" +
-          red +
-          "\n蓝球：" +
-          blue +
-          "\n奖池：" +
-          poolmoney +
-          "万元\n一等奖 " +
-          content;
-      }
-      $.notify("彩票查询", name, detail);
-      $.log(name + "\n" + detail);
+      $.data = JSON.stringify(response.body)
+      var getred = /ssqRed-dom\\\"\>\[.*?\]\</
+      var getblue = /ssqBlue-dom\\\"\>\[.*?\]\</
+      var getqh = /ssqQh-dom\\\"\>.*?\</
+      var prered = $.data.match(getred)
+      var preblue = $.data.match(getblue)
+      var preqh = $.data.match(getqh)
+      var red = JSON.stringify(prered).slice(18, -4)
+      var blue = JSON.stringify(preblue).slice(19, -4)
+      var qh = JSON.stringify(preqh).slice(16, -3)
+      var detail = "红球：" + red + "\n蓝球：" + blue;
+      $.notify("彩票查询", "双色球 " + qh + "期", detail);
+      $.log("双色球" + "\n" + detail);
     }
   });
 }
@@ -196,7 +184,7 @@ function checkdlt() {
 }
 
 function check3d() {
-  const url = `http://www.cwl.gov.cn/cwl_admin/kjxx/findDrawNotice?name=3d&issueCount=30`;
+  const url = `http://www.cwl.gov.cn/html5/fcpz/yxjs/fc3d/`;
   const headers = {
     "Accept-Encoding": `gzip, deflate`,
     Connection: `keep-alive`,
@@ -215,33 +203,16 @@ function check3d() {
 
   return $.http.get(myRequest).then((response) => {
     if (response.statusCode == 200) {
-      $.data = JSON.parse(response.body).result[0];
-      var poolmoney = JSON.stringify(
-        ($.data.poolmoney / 10000).toFixed(2)
-      ).slice(1, -1);
-      var date = $.data.date;
-      var name = $.data.name;
-      var red = $.data.red;
-      var num = red.split(",");
-      var all = 0;
-      for (var i = 0; i < num.length; i++) {
-        all = all + parseInt(num[i]);
-      }
-      if (poolmoney == "NaN") {
-        var detail = "结果：" + red + "\n和值：" + all + "\n奖池信息暂未更新";
-      } else {
-        var detail =
-          date +
-          "\n结果：" +
-          red +
-          "\n和值：" +
-          all +
-          "\n奖池：" +
-          poolmoney +
-          "万元";
-      }
-      $.notify("彩票查询", name, detail);
-      $.log(name + "\n" + detail);
+      $.data = JSON.stringify(response.body)
+      var getblue = /fcBlue-dom\\\"\>\[.*?\]\</
+      var getqh = /fcQh-dom\\\"\>.*?\</
+      var preblue = $.data.match(getblue)
+      var preqh = $.data.match(getqh)
+      var blue = JSON.stringify(preblue).slice(18, -4)
+      var qh = JSON.stringify(preqh).slice(15, -3)
+      var detail = "结果：" + blue;
+      $.notify("彩票查询", "福彩3D " + qh + "期", detail);
+      $.log("福彩3D" + "\n" + detail);
     }
   });
 }
